@@ -1,0 +1,25 @@
+service: comments-api
+app: comments-api
+frameworkVersion: "3"
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: eu-west-3
+functions:
+  getLastestComments:
+    handler: src/lambdas/getLastestComments.default
+    events:
+      - httpApi: "GET /comments"
+  getArticleWIthComments:
+    handler: src/lambdas/getArticleWIthComments.default
+    events:
+      - httpApi: "GET /articles/{articleId}"
+  createComment:
+    handler: src/lambdas/createComment.default
+    events:
+      - httpApi: "POST /comments"

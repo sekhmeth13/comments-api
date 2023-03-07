@@ -1,0 +1,29 @@
+entity: comment
+connectedFields: ["author", "originalComment", "article"]
+items:
+  comment1:
+    author: "@user1"
+    content: "{{lorem.lines(3)}}"
+    article: "@article1"
+  comment2:
+    author: "@user2"
+    content: "{{lorem.lines(3)}}"
+    article: "@article1"
+  comment3:
+    author: "@user3"
+    content: "{{lorem.lines(3)}}"
+    article: "@article1"
+    originalComment: "@comment2"
+  comment4:
+    author: "@user1"
+    content: "{{lorem.lines(3)}}"
+    article: "@article2"
+  comment5:
+    author: "@user2"
+    content: "{{lorem.lines(3)}}"
+    article: "@article2"
+  comment6:
+    author: "@user3"
+    content: "{{lorem.lines(3)}}"
+    article: "@article2"
+    originalComment: "@comment4"

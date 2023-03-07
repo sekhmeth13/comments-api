@@ -1,0 +1,31 @@
+{
+  "name": "comments-api",
+  "packageManager": "yarn@3.4.1",
+  "dependencies": {
+    "@prisma/client": "4.11.0",
+    "@types/aws-lambda": "^8.10.111",
+    "serverless": "^3.28.1",
+    "typescript": "^4.9.5",
+    "zod": "^3.21.2"
+  },
+  "devDependencies": {
+    "@getbigger-io/prisma-fixtures-cli": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "prisma": "4.11.0",
+    "serverless-offline": "^12.0.4",
+    "serverless-plugin-typescript": "^2.1.4"
+  },
+  "engines": {
+    "node": "18.14.0"
+  },
+  "prisma": {
+    "schema": "config/prisma/schema.prisma"
+  },
+  "scripts": {
+    "start-api": "yarn serverless offline start",
+    "start-db": "docker run --name mysql-instance --publish 6603:3306 -e MYSQL_ROOT_PASSWORD=test -e MYSQL_DATABASE=test-db  -d mysql:8",
+    "deploy": "yarn sls deploy -v"
+  }
+}

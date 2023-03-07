@@ -1,0 +1,11 @@
+entity: user
+items:
+  user1:
+    email: "{{internet.email}}"
+    nickname: "{{internet.userName}}"
+  user2:
+    email: "{{internet.email}}"
+    nickname: "{{internet.userName}}"
+  user3:
+    email: "{{internet.email}}"
+    nickname: "{{internet.userName}}"

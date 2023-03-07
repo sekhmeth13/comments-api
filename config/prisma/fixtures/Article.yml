@@ -1,0 +1,8 @@
+entity: article
+items:
+  article1:
+    title: "article1"
+    content: "{{lorem.paragraphs}}"
+  article2:
+    title: "article2"
+    content: "{{lorem.paragraphs}}"
