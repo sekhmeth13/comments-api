@@ -44,10 +44,6 @@
 </div>
 
 <style>
-  h1 {
-    text-align: center;
-    text-transform: uppercase;
-  }
   :global(.comment-infos) {
     text-align: right;
   }

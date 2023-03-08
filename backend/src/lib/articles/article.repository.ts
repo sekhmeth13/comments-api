@@ -11,7 +11,12 @@ class ArticleRepository {
       include: {
         comments: {
           include: {
-            comments: true
+            comments: {
+              select: {
+                author: true
+              }
+            },
+            author: true
           }
         }
       }
