@@ -19,6 +19,18 @@ class CommentRepository {
         createdAt: 'desc'
       },
       take: limit,
+      include: {
+        author: {
+          select: {
+            nickname: true
+          }
+        },
+        article: {
+          select: {
+            title: true
+          }
+        }
+      }
 
     })
   }

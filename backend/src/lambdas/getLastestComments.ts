@@ -8,7 +8,7 @@ import commentRepository from '../lib/comments/comment.repository'
 
 export default async function(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   
-    const limit = event.queryStringParameters?.limit ?? ''
+    const limit = event.queryStringParameters?.limit ?? '10'
 
     if(!isNumeric(limit) || !z.number().gte(1).lte(100).safeParse(limit)){
       return {
