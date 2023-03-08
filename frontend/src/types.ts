@@ -12,3 +12,9 @@ export type Comment = {
     articleId: string
     createdAt: Date
   }
+
+export type Article = {
+  id: string
+  title: string
+  content: string
+}

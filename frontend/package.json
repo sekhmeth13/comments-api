@@ -4,10 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host --base /index.html",
-    "build": "vite build",
-    "preview": "vite preview --host",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "start": "vite --host --open /index.html"
   },
   "devDependencies": {
     "@material/typography": "^14.0.0",
@@ -23,6 +20,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.13",
     "dayjs": "^1.11.7",
+    "detect-url-change": "^1.0.2",
     "postcss": "^8.4.21",
     "svelte-material-ui": "^7.0.0-beta.0",
     "svelte-routing": "^1.6.0",

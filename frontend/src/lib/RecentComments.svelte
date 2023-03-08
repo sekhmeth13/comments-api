@@ -10,65 +10,34 @@
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
   import type { Comment } from "../types";
-  import { Router, Link, Route } from "svelte-routing";
-  import Article from "./Article.svelte";
+  import { navigate } from "svelte-routing";
 
   dayjs.extend(relativeTime);
-  let comments: Comment[];
-  let articleIds: { article1: string; article2: string };
-
-  onMount(async () => {
-    const response = await fetch("http://localhost:3000/comments");
-    if (!response.ok) {
-      const message = await response.json();
-      console.error(message);
-      return;
-    }
-    comments = (await response.json()).data;
-
-    articleIds = comments.reduce((ids, currCom) => {
-      ids[currCom.article.title] = currCom.articleId;
-      return ids;
-    }, articleIds);
-  });
-  export let url = "";
+  export let comments: Comment[];
 </script>
-
-<Router {url}>
-  <div>
-    <Route path="/article1.html"
-      ><Article articleId={articleIds["article1"]} /></Route
-    >
-    <Route path="/article2.html"
-      ><Article articleId={articleIds["article2"]} /></Route
-    >
-  </div>
-</Router>
 
 <div>
   <h1>Recent comments</h1>
   {#if comments === undefined}
     Loading Comments...
   {:else}
-    <List class="comment-list" twoLine avatarList nonInteractive>
+    <List class="comment-list" twoLine avatarList>
       {#each comments as comment}
-        <a href="/{comment.article.title}.html">
-          <Item>
-            <Graphic
-              style="background-image: url(https://place-hold.it/40x40?text={comment.author.nickname.substring(
-                0,
-                1
-              )}&fontsize=16)"
-            />
-            <Text style="width: 100%">
-              <PrimaryText class="comment-text">{comment.content}</PrimaryText>
-              <SecondaryText class="comment-infos">
-                <span class="author-nickname">{comment.author.nickname}</span>
-                {dayjs(comment.createdAt).fromNow()}
-              </SecondaryText>
-            </Text>
-          </Item>
-        </a>
+        <Item on:SMUI:action={() => navigate(`/${comment.article.title}.html`)}>
+          <Graphic
+            style="background-image: url(https://place-hold.it/40x40?text={comment.author.nickname.substring(
+              0,
+              1
+            )}&fontsize=16)"
+          />
+          <Text style="width: 100%">
+            <PrimaryText class="comment-text">{comment.content}</PrimaryText>
+            <SecondaryText class="comment-infos">
+              <span class="author-nickname">{comment.author.nickname}</span>
+              {dayjs(comment.createdAt).fromNow()} on {comment.article.title}
+            </SecondaryText>
+          </Text>
+        </Item>
       {/each}
     </List>
   {/if}

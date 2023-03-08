@@ -24,8 +24,10 @@
     "schema": "config/prisma/schema.prisma"
   },
   "scripts": {
-    "start-api": "yarn serverless offline start",
-    "start-db": "docker run --name mysql-instance --publish 6603:3306 -e MYSQL_ROOT_PASSWORD=test -e MYSQL_DATABASE=test-db  -d mysql:8",
-    "deploy": "yarn sls deploy -v"
+    "start:api": "yarn serverless offline start --host 0.0.0.0 ",
+    "start:db": "docker run --name mysql-instance --publish 6603:3306 -e MYSQL_ROOT_PASSWORD=test -e MYSQL_DATABASE=test-db -d mysql:8",
+    "load:migrations": "yarn prisma migrate dev",
+    "load:fixtures": "env $(cat .env|xargs) yarn fixtures ./config/prisma/fixtures",
+    "start": "yarn start:db && yarn load:migrations && yarn load:fixtures && yarn start:api"
   }
 }
