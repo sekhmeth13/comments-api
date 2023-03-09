@@ -11,10 +11,11 @@ export type Comment = {
     }
     articleId: string
     createdAt: Date
+    responses: Comment[]
   }
 
 export type Article = {
   id: string
-  title: string
+  title: 'article1' | 'article2'
   content: string
 }

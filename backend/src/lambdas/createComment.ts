@@ -5,7 +5,7 @@ import type {
 import commentRepository, {commentCreateInputSchema} from '../lib/comments/comment.repository'
 
 export default async function(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-  
+  console.log(event)
   const input = JSON.parse(event.body ?? '')
   const inputCheckResult = commentCreateInputSchema.safeParse(input)
   if(!inputCheckResult.success){

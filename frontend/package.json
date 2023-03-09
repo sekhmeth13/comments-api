@@ -22,9 +22,11 @@
     "autoprefixer": "^10.4.13",
     "dayjs": "^1.11.7",
     "detect-url-change": "^1.0.2",
+    "google-one-tap": "^1.0.6",
     "postcss": "^8.4.21",
     "svelte-material-ui": "^7.0.0-beta.0",
     "svelte-routing": "^1.6.0",
-    "tailwindcss": "^3.2.7"
+    "tailwindcss": "^3.2.7",
+    "vite-plugin-mkcert": "^1.13.3"
   }
 }

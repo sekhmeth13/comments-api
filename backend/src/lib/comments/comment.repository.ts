@@ -43,6 +43,9 @@ class CommentRepository {
         authorId: input.authorId,
         content: input.content,
         originalCommentId: input.originalCommentId ?? null
+      },
+      include: {
+        author: true
       }
     })
   }

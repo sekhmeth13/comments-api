@@ -4,6 +4,8 @@ frameworkVersion: "3"
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
+package:
+  individually: false
 
 provider:
   name: aws
@@ -19,7 +21,15 @@ functions:
     handler: src/lambdas/getArticleWIthComments.default
     events:
       - httpApi: "GET /articles/{articleId}"
+  listArticles:
+    handler: src/lambdas/listArticles.default
+    events:
+      - httpApi: "GET /articles"
   createComment:
     handler: src/lambdas/createComment.default
     events:
       - httpApi: "POST /comments"
+  loginGoogle:
+    handler: src/lambdas/loginOrSignupViaGoogle.default
+    events:
+      - httpApi: "POST /login/google"

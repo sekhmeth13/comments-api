@@ -11,14 +11,43 @@ class ArticleRepository {
       include: {
         comments: {
           include: {
-            comments: {
-              select: {
-                author: true
-              }
+            responses: {
+              include: { 
+                responses: {
+                  include: { 
+                    responses: {
+                      include: { author: true },
+                      orderBy: {
+                        createdAt: 'desc'
+                      }
+                    },
+                    author: true },
+                    orderBy: {
+                      createdAt: 'desc'
+                    }
+                },
+                author: true },
+                orderBy: {
+                  createdAt: 'desc'
+                }
             },
             author: true
+          },
+          where: {
+            originalComment: null
+          },
+          orderBy: {
+            createdAt: 'desc'
           }
         }
+      }
+    })
+  }
+  async listAllArticles(){
+    return this.databaseClient.article.findMany({
+      select: {
+        id: true,
+        title: true
       }
     })
   }

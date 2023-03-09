@@ -1,19 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { Article, Comment } from "../types";
-    import Card, { Content } from "@smui/card";
-    import List, {
-        Item,
-        Graphic,
-        Text,
-        PrimaryText,
-        Separator,
-        SecondaryText,
-    } from "@smui/list";
-    import Textfield, { Input } from "@smui/textfield";
-    import HelperText from "@smui/textfield/helper-text";
+
+    import Button, { Label } from "@smui/button";
+    import IconButton from "@smui/icon-button";
+    import List, { Separator } from "@smui/list";
     import dayjs from "dayjs";
     import relativeTime from "dayjs/plugin/relativeTime";
+    import CommentList from "./CommentList.svelte";
+    import googleOneTap from "google-one-tap";
     dayjs.extend(relativeTime);
     export let articleId: string;
     $: articleId;
@@ -22,8 +17,51 @@
             comments: Comment[];
         })[];
     };
+
     let newComment = "";
+    let user = localStorage.authenticatedUser;
+    $: newComment;
+    $: user;
+
+    // articleIds.subscribe((value) => {
+    //     console.log({ value });
+    //     articleIdsValue = value;
+    // });
+
+    const addNewComment = async (event: CustomEvent<any>) => {
+        const response = await fetch("http://localhost:3000/comments"); // add the body. If in response to, add the commentId
+        if (!response.ok) {
+            const message = await response.json();
+            console.error(message);
+            return;
+        }
+        const createdComment = (await response.json()).data;
+        console.log(createdComment);
+    };
+
     onMount(async () => {
+        if (!localStorage.authenticatedUser) {
+            const options = {
+                client_id:
+                    "992397750279-s30dmhd3v1u0qbfpc738tmopu15nv741.apps.googleusercontent.com",
+            };
+
+            await googleOneTap(options, async ({ credential }) => {
+                const serverResponse = await fetch(
+                    "http://localhost:3000/login/google",
+                    {
+                        method: "POST",
+                        body: JSON.stringify({ credential }),
+                    }
+                );
+                // Send response to server
+                localStorage.authenticatedUser = JSON.stringify(
+                    (await serverResponse.json()).data
+                );
+                user = localStorage.authenticatedUser;
+            });
+        }
+
         const response = await fetch(
             "http://localhost:3000/articles/" + articleId
         );
@@ -44,30 +82,20 @@
         <h1>{articleWithComments?.title}</h1>
         <div class="article-content">{articleWithComments?.content}</div>
         <Separator />
-        <List class="comment-list" avatarList nonInteractive>
-            {#each articleWithComments.comments as comment}
-                <Item>
-                    <Graphic
-                        style="background-image: url(https://place-hold.it/40x40?text={comment.author.nickname.substring(
-                            0,
-                            1
-                        )}&fontsize=16)"
-                    />
-                    <Text style="width: 100%">
-                        <PrimaryText class="comment-text"
-                            >{comment.content}</PrimaryText
-                        >
-                        <SecondaryText class="comment-infos">
-                            <span class="author-nickname"
-                                >{comment.author.nickname}</span
-                            >
-                            {dayjs(comment.createdAt).fromNow()}
-                        </SecondaryText>
-                    </Text>
-                </Item>
-            {/each}
-        </List>
-        <textarea />
+        <CommentList
+            comments={articleWithComments.comments}
+            articleId={articleWithComments.id}
+            nonInteractive
+            bind:user
+        />
+        {#if user}
+            <div class="new-comment-block">
+                <textarea bind:value={newComment} />
+                <Button on:click={addNewComment} variant="raised">
+                    <Label>Raised</Label>
+                </Button>
+            </div>
+        {/if}
     {/if}
 </div>
 
