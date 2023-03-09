@@ -19,6 +19,7 @@
     "vite": "^4.1.0"
   },
   "dependencies": {
+    "@types/google.accounts": "^0.0.6",
     "autoprefixer": "^10.4.13",
     "dayjs": "^1.11.7",
     "detect-url-change": "^1.0.2",

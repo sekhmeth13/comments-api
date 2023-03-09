@@ -28,25 +28,27 @@
     //     articleIdsValue = value;
     // });
 
-    const addNewComment = async (event: CustomEvent<any>) => {
-        const response = await fetch("http://localhost:3000/comments"); // add the body. If in response to, add the commentId
-        if (!response.ok) {
-            const message = await response.json();
-            console.error(message);
-            return;
-        }
-        const createdComment = (await response.json()).data;
-        console.log(createdComment);
-    };
+    async function sendComment(
+        comment: Pick<Comment, "articleId" | "content">
+    ) {
+        const parsedUser = JSON.parse(user);
+        const serverResponse = await fetch("http://localhost:3000/comments", {
+            method: "POST",
+            body: JSON.stringify({ ...comment, authorId: parsedUser.id }),
+        });
+        const createdComment = (await serverResponse.json()).data;
+
+        articleWithComments.comments.unshift(createdComment);
+        articleWithComments.comments = articleWithComments.comments;
+        newComment = "";
+    }
 
     onMount(async () => {
-        if (!localStorage.authenticatedUser) {
-            const options = {
-                client_id:
-                    "992397750279-s30dmhd3v1u0qbfpc738tmopu15nv741.apps.googleusercontent.com",
-            };
-
-            await googleOneTap(options, async ({ credential }) => {
+        window["google"].accounts.id.initialize({
+            client_id:
+                "992397750279-s30dmhd3v1u0qbfpc738tmopu15nv741.apps.googleusercontent.com",
+            callback: async ({ credential }) => {
+                console.log(credential);
                 const serverResponse = await fetch(
                     "http://localhost:3000/login/google",
                     {
@@ -59,7 +61,10 @@
                     (await serverResponse.json()).data
                 );
                 user = localStorage.authenticatedUser;
-            });
+            },
+        });
+        if (!localStorage.authenticatedUser) {
+            window["google"].accounts.id.prompt();
         }
 
         const response = await fetch(
@@ -71,7 +76,6 @@
             return;
         }
         articleWithComments = (await response.json()).data;
-        console.log(articleWithComments);
     });
 </script>
 
@@ -91,8 +95,15 @@
         {#if user}
             <div class="new-comment-block">
                 <textarea bind:value={newComment} />
-                <Button on:click={addNewComment} variant="raised">
-                    <Label>Raised</Label>
+                <Button
+                    on:click={() =>
+                        sendComment({
+                            content: newComment,
+                            articleId,
+                        })}
+                    variant="raised"
+                >
+                    <Label>commenter article</Label>
                 </Button>
             </div>
         {/if}
@@ -110,7 +121,12 @@
         margin: auto;
         margin-bottom: 15px;
     }
-    textarea {
+    .new-comment-block {
+        display: block;
+        margin: auto;
+        width: 600px;
+    }
+    .new-comment-block textarea {
         display: block;
         margin: auto;
         width: 600px;

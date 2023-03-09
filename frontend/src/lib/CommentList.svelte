@@ -22,6 +22,7 @@
     $: addingResponseTo;
     $: comments;
     let newResponseToComment: string;
+    $: newResponseToComment;
 
     function addResponseToNestedComment(
         commentId,
@@ -30,12 +31,14 @@
     ) {
         comments.every((c) => {
             if (c.id === commentId) {
-                console.log(response);
                 c.responses.unshift(response);
                 return;
-            } else {
+            }
+            if (c.responses) {
                 addResponseToNestedComment(commentId, response, c.responses);
             }
+
+            return true;
         });
     }
     async function sendComment(
@@ -47,21 +50,24 @@
             body: JSON.stringify({ ...comment, authorId: parsedUser.id }),
         });
         const createdComment = (await serverResponse.json()).data;
-        console.log({ createdComment });
         if (comment.originalCommentId) {
             addResponseToNestedComment(
                 comment.originalCommentId,
                 createdComment,
                 comments
             );
-            comments = comments;
+        } else {
+            comments.unshift(createdComment);
         }
+        comments = comments;
+        newResponseToComment = "";
+        addingResponseTo = "";
     }
 </script>
 
 <List class="comment-list" threeLine avatarList bind:nonInteractive>
     {#each comments as comment (comment)}
-        <Item on:SMUI:click={() => navigate(`/${comment.article.title}.html`)}>
+        <Item on:SMUI:action={() => navigate(`/${comment.article.title}.html`)}>
             <Graphic
                 style="background-image: url(https://place-hold.it/40x40?text={comment.author.nickname.substring(
                     0,
